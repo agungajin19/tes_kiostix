@@ -7,7 +7,7 @@ from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
-from flask_jwt_extended import JWTManager, verify_jwt_in_request, get_jwt_claims
+# from flask_jwt_extended import JWTManager, verify_jwt_in_request, get_jwt_claims
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -18,25 +18,25 @@ app.config['APP_DEBUG'] = True
 ###########################
 # JWT
 ###########################
-app.config['JWT_SECRET_KEY'] = 'njnFTsdiMDni7632jk3lNeu'
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
+# app.config['JWT_SECRET_KEY'] = 'njnFTsdiMDni7632jk3lNeu'
+# app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
 
-jwt = JWTManager(app)
+# jwt = JWTManager(app)
 
-# jwt custom decorator
-# @jwt.user_claims_loader
+# # jwt custom decorator
+# # @jwt.user_claims_loader
 
 
-def internal_required(fn):
-    @wraps(fn)
-    def wrapper(*args, **kwargs):
-        verify_jwt_in_request()
-        claims = get_jwt_claims()
-        if claims['internal_status'] != 'internal':
-            return {'status': 'FORBIDDEN', 'message': 'Internal Only!'}, 403
-        else:
-            return fn(*args, **kwargs)
-    return wrapper
+# def internal_required(fn):
+#     @wraps(fn)
+#     def wrapper(*args, **kwargs):
+#         verify_jwt_in_request()
+#         claims = get_jwt_claims()
+#         if claims['internal_status'] != 'internal':
+#             return {'status': 'FORBIDDEN', 'message': 'Internal Only!'}, 403
+#         else:
+#             return fn(*args, **kwargs)
+#     return wrapper
 
 
 #################
@@ -57,11 +57,6 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
-
-###################
-# Middlewares
-###################
-
 
 ###################
 # LOG RESPONSE

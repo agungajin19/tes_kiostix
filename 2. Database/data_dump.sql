@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.28, for Linux (x86_64)
 --
--- Host: localhost    Database: buku
+-- Host: localhost    Database: book
 -- ------------------------------------------------------
 -- Server version	5.7.28-0ubuntu0.19.04.2
 
@@ -16,6 +16,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `alembic_version`
+--
+
+DROP TABLE IF EXISTS `alembic_version`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `alembic_version` (
+  `version_num` varchar(32) NOT NULL,
+  PRIMARY KEY (`version_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `alembic_version`
+--
+
+LOCK TABLES `alembic_version` WRITE;
+/*!40000 ALTER TABLE `alembic_version` DISABLE KEYS */;
+/*!40000 ALTER TABLE `alembic_version` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `buku`
 --
 
@@ -24,12 +46,12 @@ DROP TABLE IF EXISTS `buku`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `buku` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `judul` varchar(255) NOT NULL,
   `penulis_id` int(11) NOT NULL,
+  `judul` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `table_penulis_id` (`penulis_id`),
-  CONSTRAINT `table_penulis_id` FOREIGN KEY (`penulis_id`) REFERENCES `penulis` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+  KEY `penulis_id` (`penulis_id`),
+  CONSTRAINT `buku_ibfk_1` FOREIGN KEY (`penulis_id`) REFERENCES `penulis` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +60,7 @@ CREATE TABLE `buku` (
 
 LOCK TABLES `buku` WRITE;
 /*!40000 ALTER TABLE `buku` DISABLE KEYS */;
-INSERT INTO `buku` VALUES (1,'belajar membaca',1),(2,'belajar menulis',1),(3,'belajar lari',1),(4,'menghitung hari',2),(5,'menghitung bulan',2),(6,'cara makan',3);
+INSERT INTO `buku` VALUES (1,1,'cara memasak'),(2,1,'cara berlari'),(3,1,'cara makan'),(4,2,'belajar mtk'),(5,2,'belajar ipa'),(6,3,'coding for life'),(8,1,'cara masak air'),(10,1,'makanan enak'),(11,4,'buah buahan'),(12,4,'seru seruan'),(14,5,'jurus seribu bayanagan'),(15,5,'orochimaru');
 /*!40000 ALTER TABLE `buku` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -62,7 +84,7 @@ CREATE TABLE `kategori` (
 
 LOCK TABLES `kategori` WRITE;
 /*!40000 ALTER TABLE `kategori` DISABLE KEYS */;
-INSERT INTO `kategori` VALUES (1,'action'),(2,'drama'),(3,'comedy'),(4,'thriller'),(5,'romance');
+INSERT INTO `kategori` VALUES (1,'drama'),(2,'action'),(3,'horror'),(4,'comedy'),(5,'romance');
 /*!40000 ALTER TABLE `kategori` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -75,14 +97,14 @@ DROP TABLE IF EXISTS `kategori_detail`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `kategori_detail` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `buku_id` int(11) NOT NULL,
-  `kategori_id` int(11) NOT NULL,
+  `book_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `table_buku_id` (`buku_id`),
-  KEY `table_kategori_id` (`kategori_id`),
-  CONSTRAINT `table_buku_id` FOREIGN KEY (`buku_id`) REFERENCES `buku` (`id`),
-  CONSTRAINT `table_kategori_id` FOREIGN KEY (`kategori_id`) REFERENCES `kategori` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+  KEY `book_id` (`book_id`),
+  KEY `category_id` (`category_id`),
+  CONSTRAINT `kategori_detail_ibfk_1` FOREIGN KEY (`book_id`) REFERENCES `buku` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `kategori_detail_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `kategori` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,7 +113,7 @@ CREATE TABLE `kategori_detail` (
 
 LOCK TABLES `kategori_detail` WRITE;
 /*!40000 ALTER TABLE `kategori_detail` DISABLE KEYS */;
-INSERT INTO `kategori_detail` VALUES (1,1,1),(2,1,2),(3,1,3),(4,2,2),(5,2,4),(6,3,1),(7,3,3),(8,3,5),(9,3,2),(10,4,1),(11,4,5),(12,5,2),(13,5,3),(14,6,3),(15,6,5),(16,6,4),(17,6,1);
+INSERT INTO `kategori_detail` VALUES (1,1,1),(2,1,2),(3,1,4),(4,2,3),(5,2,4),(6,2,5),(7,2,1),(8,3,2),(9,3,3),(10,4,5),(11,5,5),(12,5,2),(13,6,1),(14,6,2),(15,6,3),(16,8,1),(17,8,2),(18,8,3),(22,10,1),(23,10,2),(24,11,1),(25,11,2),(26,12,2),(27,12,3),(32,14,2),(33,14,3),(34,15,2),(35,15,4);
 /*!40000 ALTER TABLE `kategori_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -115,7 +137,7 @@ CREATE TABLE `penulis` (
 
 LOCK TABLES `penulis` WRITE;
 /*!40000 ALTER TABLE `penulis` DISABLE KEYS */;
-INSERT INTO `penulis` VALUES (1,'agung'),(2,'aji'),(3,'nugroho'),(4,'muklis'),(5,'husnunniyah');
+INSERT INTO `penulis` VALUES (1,'agung'),(2,'aji'),(3,'nugroho'),(4,'anggi'),(5,'budi');
 /*!40000 ALTER TABLE `penulis` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -128,4 +150,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-03-19  9:37:46
+-- Dump completed on 2020-03-20  7:51:19

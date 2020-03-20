@@ -1,0 +1,15 @@
+2. Query untuk mendapatkan semua buku berdasarkan nama penulis
+SELECT b.* from buku b
+INNER JOIN penulis p
+ON p.id = b.penulis_id
+WHERE b.penulis_id = 1;
+
+3. Query untuk menampilkan data buku dan nama penulis berdasarkan kategori
+SELECT b.*, p.nama, k.nama  from kategori k
+INNER JOIN kategori_detail kt
+ON k.id = kt.category_id
+INNER JOIN buku b
+ON b.id = kt.book_id
+INNER JOIN penulis p
+ON p.id = b.penulis_id
+WHERE k.id = 2;

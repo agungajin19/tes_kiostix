@@ -1,5 +1,5 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link} from "react-router-dom";
 import { connect } from "unistore/react";
 import { actions, store } from "../stores/MainStore";
 
@@ -19,9 +19,19 @@ class Home extends React.Component{
             return (
               <tr>
                 <th scope="row">{key + 1}</th>
+                <td>{item.judul}</td>
                 <td>{item.nama_penulis}</td>
                 <td>{item.kategori}</td>
-                <td></td>
+                <td>
+                    <button
+                        type="button"
+                        class="close"
+                        aria-label="Close"
+                        onClick={() => this.props.deleteBook(item.id)}
+                        >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </td>
               </tr>
             );
           });
@@ -36,13 +46,13 @@ class Home extends React.Component{
         return(
             <React.Fragment>
                 <div className="container">
-                    <form className="col-12 box-filter form-row">
+                    <form className="col-12 box-filter form-row mt-5">
                         <div className="col-4 form-group">
-                            <h1>Kategori</h1>
+                            <h3>Kategori</h3>
                             <select
                                 className="custom-select col-12 "
-                                id="category"
-                                name="category"
+                                id="categoryId"
+                                name="categoryId"
                                 onChange={e => this.handleInputFilter(e)}
                             >
                                 <option value="">Semua Kategori</option>
@@ -50,11 +60,11 @@ class Home extends React.Component{
                             </select>
                         </div>
                         <div className="col-4 form-group">
-                            <h1>Penulis</h1>
+                            <h3>Penulis</h3>
                             <select
                                 className="custom-select col-12 "
-                                id="penulis"
-                                name="penulis"
+                                id="penulisId"
+                                name="penulisId"
                                 onChange={e => this.handleInputFilter(e)}
                             >
                                 <option value="">Semua Penulis</option>
@@ -62,19 +72,20 @@ class Home extends React.Component{
                             </select>
                         </div>
                         <div className="col-4 form-group">
-                            <h1>Judul</h1>
+                            <h3>Judul</h3>
                             <input
                                 type="text"
                                 className="form-control"
-                                id="nameProduct"
-                                name="nameProduct"
-                                placeholder="Cari Produk"
+                                id="judul"
+                                name="judul"
+                                placeholder="Cari Buku"
                                 onChange={e => this.handleInputFilter(e)}
                             />
                         </div>
                     </form>
-                    <div className="col-12 box-content">                      
-                        <table className="table table-sm">
+                    <div className="col-12 box-content"> 
+                        <Link to='/add' type="button" className="btn btn-secondary">Tambah</Link>                     
+                        <table className="table table-sm mt-4">
                             <thead>
                             <tr>
                                 <th scope="col">No</th>
@@ -92,4 +103,4 @@ class Home extends React.Component{
         )
     }
 }
-export default connect("listBook, listPenulis, listCategory", actions)(withRouter(Home));
+export default connect("listBook, listPenulis, listCategory, judul, penulisId, categoryId", actions)(withRouter(Home));
